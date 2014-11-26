@@ -97,6 +97,25 @@ class ShoppingCart extends Component
         $this->saveToSession();
     }
 
+    public function decrease($position)
+    {
+        if (isset($this->_positions[$position->getId()])) {
+            $this->_positions[$position->getId()]->setQuantity(
+                $this->_positions[$position->getId()]->getQuantity() - 1);
+
+
+            $this->trigger(self::EVENT_CART_CHANGE, new Event([
+                'data' => ['action' => 'put', 'position' => $this->_positions[$position->getId()]],
+            ]));
+            $this->saveToSession();
+
+
+        } else {
+           return;
+        }
+
+    }
+
     /**
      * Removes position from the cart
      * @param CartPositionInterface $position
